@@ -286,7 +286,7 @@ dialog::backdrop{background:rgba(6,20,20,.65)}
 
 <dialog id="dlg" aria-labelledby="dt"><div class="dlg"><div class="pic" id="dp"></div><div>
   <button class="close" id="dc" aria-label="Close">×</button>
-  <small class="crumb" id="dk" style="margin:0"></small><h3 id="dt"></h3><div class="price" id="dr"></div><p id="dd" class="lead"></p>
+  <small class="crumb" id="dk" style="margin:0"></small><h3 id="dt"></h3><div class="price" id="dr"></div><p id="dpd" class="lead"></p>
   <div class="row start"><button class="btn" id="da"></button><a class="btn ghost" href="tel:+919727596969">Call +91 97275 96969</a></div>
 </div></div></dialog>
 
@@ -436,7 +436,7 @@ function render(){const q=$('#q').value.trim().toLowerCase(),s=$('#sort').value;
  if(!r.length){g.innerHTML='<p class="empty" style="grid-column:1/-1">No products match that search. Try a shorter word, or call us and we will help you find it.</p>'}
  r.forEach(p=>{const a=document.createElement('article');a.className='card';a.innerHTML=`<button class="pic" type="button" aria-label="View ${p.name.replace(/"/g,'')}"><span class="ticket">${p.price}</span></button><div class="body"><small>${CATS[p.c][1]}</small><h3>${p.name}</h3><p>${p.desc}</p><div class="acts"><button class="link" type="button" data-v>Details</button><button class="link add ${list.includes(p.slug)?'on':''}" type="button" data-a>${addLabel(p)}</button></div></div>`;
   pic(a.querySelector('.pic'),p.art,p.slug,src(p),p.name);a.querySelector('.pic').onclick=a.querySelector('[data-v]').onclick=()=>open(p);a.querySelector('[data-a]').onclick=()=>toggle(p);g.append(a)})}
-let cur;function open(p){cur=p;const d=$('#dp');d.innerHTML='';pic(d,p.art,p.slug,src(p),p.name);$('#dk').textContent='Products / '+CATS[p.c][1]+' / '+p.name;$('#dt').textContent=p.name;$('#dr').textContent=p.num?p.price:'Price on request';$('#dd').textContent=p.desc;$('#da').textContent=addLabel(p);$('#dlg').showModal()}
+let cur;function open(p){cur=p;const d=$('#dp');d.innerHTML='';pic(d,p.art,p.slug,src(p),p.name);$('#dk').textContent='Products / '+CATS[p.c][1]+' / '+p.name;$('#dt').textContent=p.name;$('#dr').textContent=p.num?p.price:'Price on request';$('#dpd').textContent=p.desc;$('#da').textContent=addLabel(p);$('#dlg').showModal()}
 $('#dc').onclick=()=>$('#dlg').close();$('#dlg').onclick=e=>{if(e.target===$('#dlg'))$('#dlg').close()};
 $('#da').onclick=()=>{toggle(cur);$('#da').textContent=addLabel(cur)};
 function syncList(){$('#navcount').textContent=$('#navcount2').textContent=list.length;const c=$('#chips');c.innerHTML='';if(!list.length){c.innerHTML='<span class="lead" style="font-weight:400">Nothing yet. Choose “Add to enquiry” on any product.</span>';return}
