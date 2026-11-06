@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Cube Furnishing</title>
+<title>Cube Furnishing | Curtains, Blinds, Wallpaper and Flooring in Vadodara</title>
+<link rel="canonical" href="https://cubefurnishing.com/">
+<meta property="og:type" content="website"><meta property="og:title" content="Cube Furnishing, Vadodara"><meta property="og:description" content="Curtains, blinds, wallpaper, sofa fabrics, mattresses and flooring in Vasna-Bhayli, Vadodara."><meta property="og:url" content="https://cubefurnishing.com/"><meta property="og:image" content="https://cubefurnishing.com/images/category-curtains.jpg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HomeGoodsStore","name":"Cube Furnishing","url":"https://cubefurnishing.com/","image":"https://cubefurnishing.com/images/category-curtains.jpg","logo":"https://cubefurnishing.com/cube-logo.png","telephone":"+919727596969","email":"info@cubefurnishing.com","address":{"@type":"PostalAddress","streetAddress":"FF-117, K P Landmark, Vasna-Bhayli Main Road","addressLocality":"Vadodara","postalCode":"391410","addressRegion":"Gujarat","addressCountry":"IN"},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"10:00","closes":"20:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":"Sunday","opens":"11:00","closes":"18:00"}],"sameAs":["https://www.instagram.com/cubefurnishings/","https://www.facebook.com/cubefurnishing","https://www.youtube.com/@cubeFurnishing"]}</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Curtains, blinds, wallpaper, sofa fabrics, mattresses and flooring in Vasna-Bhayli, Vadodara. Measurement and installation by Cube Furnishing since 2010.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -96,7 +99,7 @@ input,select,textarea{font:400 1rem var(--body);padding:10px 12px;border:1px sol
 .ticket{position:absolute;right:0;top:12px;background:var(--ticket);color:var(--on-ticket);font-weight:700;font-size:.88rem;padding:4px 10px 4px 12px;font-variant-numeric:tabular-nums;clip-path:polygon(8px 0,100% 0,100% 100%,8px 100%,0 50%);z-index:1}
 .note{position:absolute;left:8px;bottom:8px;background:rgba(10,25,25,.72);color:#f4f3ea;font-size:.68rem;padding:1px 7px;z-index:1}
 .body{padding:14px;display:flex;flex-direction:column;gap:6px;flex:1}
-.body h3{font-size:1.14rem;line-height:1.2}.body small{color:var(--muted);font-size:.8rem}
+.body h3{font-size:1.14rem;line-height:1.2}.body h3 a{color:inherit;text-decoration:none}.body h3 a:hover{text-decoration:underline}.body small{color:var(--muted);font-size:.8rem}
 .body p{color:var(--muted);font-size:.88rem;line-height:1.45;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
 .acts{margin-top:auto;padding-top:8px;display:flex;flex-wrap:wrap;gap:8px}
 .link{background:none;border:0;padding:6px 0;color:var(--peacock);font:600 .88rem var(--body);cursor:pointer;text-decoration:underline;text-underline-offset:3px;min-height:36px}
@@ -288,7 +291,7 @@ dialog::backdrop{background:rgba(6,20,20,.65)}
 <dialog id="dlg" aria-labelledby="dt"><div class="dlg"><div class="pic" id="dp"></div><div>
   <button class="close" id="dc" aria-label="Close">×</button>
   <small class="crumb" id="dk" style="margin:0"></small><h3 id="dt"></h3><small class="lead" id="dr"></small><p id="dpd" class="lead"></p>
-  <div class="row start"><a class="btn" id="wa1" href="https://wa.me/919727596969">Enquire on WhatsApp</a><button class="btn ghost" id="da"></button><a class="btn ghost" href="tel:+919727596969">Call +91 97275 96969</a></div>
+  <div class="row start"><a class="btn" id="wa1" href="https://wa.me/919727596969">Enquire on WhatsApp</a><button class="btn ghost" id="da"></button><a class="btn ghost" href="tel:+919727596969">Call +91 97275 96969</a><a class="btn ghost" id="pg" href="https://cubefurnishing.com/#products">Open full page</a></div>
 </div></div></dialog>
 
 <script>
@@ -437,9 +440,9 @@ function render(){const q=$('#q').value.trim().toLowerCase(),s=$('#sort').value;
  if(s==='az')r.sort((a,b)=>a.name.localeCompare(b.name));
  $('#crumbcat').textContent=cat<0?'':' / '+CATS[cat][1];$('#count').textContent=`Showing ${r.length} of ${P.length} products`;const g=$('#grid');g.innerHTML='';
  if(!r.length){g.innerHTML='<p class="empty" style="grid-column:1/-1">No products match that search. Try a shorter word, or call us and we will help you find it.</p>'}
- r.forEach(p=>{const a=document.createElement('article');a.className='card';a.innerHTML=`<button class="pic" type="button" aria-label="View ${p.name.replace(/"/g,'')}"></button><div class="body"><small>${CATS[p.c][1]}</small><h3>${p.name}</h3><p>${p.desc}</p><div class="acts"><button class="link" type="button" data-v>Details</button><button class="link add ${list.includes(p.slug)?'on':''}" type="button" data-a>${addLabel(p)}</button></div></div>`;
+ r.forEach(p=>{const a=document.createElement('article');a.className='card';a.innerHTML=`<button class="pic" type="button" aria-label="View ${p.name.replace(/"/g,'')}"></button><div class="body"><small>${CATS[p.c][1]}</small><h3><a href="https://cubefurnishing.com/products/${p.slug}">${p.name}</a></h3><p>${p.desc}</p><div class="acts"><button class="link" type="button" data-v>Details</button><button class="link add ${list.includes(p.slug)?'on':''}" type="button" data-a>${addLabel(p)}</button></div></div>`;
   pic(a.querySelector('.pic'),p.art,p.slug,src(p),p.name);if(p.similar){const n=document.createElement('span');n.className='note';n.textContent='Similar product photo';a.querySelector('.pic').append(n)}a.querySelector('.pic').onclick=a.querySelector('[data-v]').onclick=()=>open(p);a.querySelector('[data-a]').onclick=()=>toggle(p);g.append(a)})}
-let cur;function open(p){cur=p;const d=$('#dp');d.innerHTML='';pic(d,p.art,p.slug,src(p),p.name);$('#dk').textContent='Products / '+CATS[p.c][1]+' / '+p.name;$('#dt').textContent=p.name;$('#dr').textContent=p.similar?'Photo shows a similar product':'';$('#wa1').href=WA+encodeURIComponent('Hello Cube Furnishing, I would like a quote for '+p.name+'.');$('#dpd').textContent=p.desc;$('#da').textContent=addLabel(p);$('#dlg').showModal()}
+let cur;function open(p){cur=p;const d=$('#dp');d.innerHTML='';pic(d,p.art,p.slug,src(p),p.name);$('#dk').textContent='Products / '+CATS[p.c][1]+' / '+p.name;$('#dt').textContent=p.name;$('#dr').textContent=p.similar?'Photo shows a similar product':'';$('#wa1').href=WA+encodeURIComponent('Hello Cube Furnishing, I would like a quote for '+p.name+'.');$('#dpd').textContent=p.desc;$('#pg').href='https://cubefurnishing.com/products/'+p.slug;$('#da').textContent=addLabel(p);$('#dlg').showModal()}
 $('#dc').onclick=()=>$('#dlg').close();$('#dlg').onclick=e=>{if(e.target===$('#dlg'))$('#dlg').close()};
 $('#da').onclick=()=>{toggle(cur);$('#da').textContent=addLabel(cur)};
 function syncList(){$('#navcount').textContent=$('#navcount2').textContent=list.length;const c=$('#chips');c.innerHTML='';if(!list.length){c.innerHTML='<span class="lead" style="font-weight:400">Nothing yet. Choose “Add to enquiry” on any product.</span>';return}
@@ -470,7 +473,7 @@ const order=[0,1,6,2,3,4,5];
 /* Mega menu: five columns. Short collections share a column. */
 [[0],[1,6],[2],[3,4],[5]].forEach(g=>{const col=document.createElement('div');col.className='mcol';g.forEach(i=>{const h=document.createElement('h3');h.style.marginTop=g.indexOf(i)?'18px':'';const a=document.createElement('a');a.href='#'+CATS[i][0];a.textContent=CATS[i][1];a.onclick=e=>{e.preventDefault();go(i)};h.append(a);col.append(h);P.filter(p=>p.c===i).forEach(p=>{const b=document.createElement('button');b.type='button';b.textContent=p.name;b.onclick=()=>{closeMenus();open(p)};col.append(b)})});$('#megagrid').append(col)});
 order.forEach(i=>{const d=document.createElement('details'),m=document.createElement('summary');m.innerHTML=CATS[i][1]+'<small>'+P.filter(p=>p.c===i).length+'</small>';d.append(m);const all=document.createElement('button');all.type='button';all.className='all';all.textContent='View all '+CATS[i][1];all.onclick=()=>go(i);d.append(all);P.filter(p=>p.c===i).forEach(p=>{const b=document.createElement('button');b.type='button';b.textContent=p.name;b.onclick=()=>{$('#drawer').close();open(p)};d.append(b)});$('#drcats').append(d);
- const li=document.createElement('li'),a=document.createElement('a');a.href='#'+CATS[i][0];a.textContent=CATS[i][1];a.onclick=e=>{e.preventDefault();go(i)};li.append(a);$('#fcats').append(li)});
+ const li=document.createElement('li'),a=document.createElement('a');a.href='https://cubefurnishing.com/collections/'+CATS[i][0];a.textContent=CATS[i][1];li.append(a);$('#fcats').append(li)});
 $('#burger').onclick=()=>$('#drawer').showModal();$('#drc').onclick=()=>$('#drawer').close();
 $('#drawer').addEventListener('click',e=>{if(e.target===$('#drawer')||e.target.closest('.drl'))$('#drawer').close()});
 $('#dq').oninput=()=>{$('#q').value=$('#hq').value=$('#dq').value;render()};$('#dq').onkeydown=e=>{if(e.key==='Enter'){$('#drawer').close();$('#products').scrollIntoView()}};
