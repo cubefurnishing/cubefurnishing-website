@@ -110,7 +110,7 @@ h1{font-size:clamp(2.3rem,5.6vw,4.2rem)}
 .field{display:grid;gap:5px;font-size:.86rem;font-weight:600;min-width:0}
 input,select,textarea{font:400 1rem var(--body);padding:10px 12px;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:2px;width:100%;min-height:44px}
 .tools .field{flex:1 1 200px;max-width:340px}.tools .sort{flex:0 1 200px}
-.count{margin-top:16px;color:var(--muted);font-size:.92rem}
+.count{margin-top:16px;color:var(--muted);font-size:.92rem}.pager{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}.pager:empty{display:none}.pager button{min-width:44px;min-height:44px;padding:0 14px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:500 .95rem var(--body);cursor:pointer;border-radius:2px}.pager button:hover:not(:disabled){border-color:var(--peacock)}.pager button[aria-current=page]{background:var(--peacock);border-color:var(--peacock);color:#fff}.pager button:disabled{opacity:.4;cursor:default}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:clamp(14px,2vw,24px);margin-top:14px}
 @media(max-width:560px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
 .card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);min-width:0}
@@ -225,12 +225,10 @@ dialog::backdrop{background:rgba(6,20,20,.65)}
   <div class="label">The full catalogue</div><h2 id="ph">All products</h2>
   <p class="lead-in">Curtains, blinds, wallpaper, upholstery, mattresses and flooring for homes and businesses in Vadodara. Open any product for details, or send it to us on WhatsApp for a quote.</p>
   <div class="cata"><aside class="side" aria-label="Collections"><div class="tabs" id="tabs" role="group" aria-label="Filter by collection"></div></aside><div class="catm">
-  <div class="tools">
-    <label class="field">Search<input id="q" type="search" placeholder="Try linen, blackout or vinyl"></label>
-    <label class="field sort">Sort by<select id="sort"><option value="">Showroom order</option><option value="az">Name: A to Z</option></select></label>
-  </div>
+  <input id="q" type="hidden">
   <p class="count" id="count" aria-live="polite"></p>
   <div class="grid" id="grid"></div>
+  <nav class="pager" id="pager" aria-label="Product pages"></nav>
   <p class="count">Ask us for a quote based on your measurements and material choice. Ask us about Wonderfloor, Armstrong and Polyflor flooring ranges.</p>
   </div></div>
 </section>
@@ -477,7 +475,7 @@ function pic(el,art,seed,src,label){const c=document.createElement('canvas');dra
  const note=document.createElement('span');note.className='note';note.textContent='Illustration';el.append(note);
  if(!src)return;const i=new Image();i.alt=label;i.loading='lazy';i.onload=()=>{i.classList.add('ok');note.remove()};i.onerror=()=>i.remove();i.src=src;c.after(i)}
 
-const $=s=>document.querySelector(s);let cat=-1,list=[];
+const $=s=>document.querySelector(s);let cat=0,pg=1,lastKey='',list=[];const PER=6;
 try{list=JSON.parse(localStorage.getItem('cube-list')||'[]').filter(s=>P.some(p=>p.slug===s))}catch(e){}
 const saveList=()=>{try{localStorage.setItem('cube-list',JSON.stringify(list))}catch(e){}};
 const src=p=>p.similar?IMG+p.similar+'.jpg':IMG+(p.slug==='monsoon-pvc-blinds'?'blinds':CATS[p.c][2])+'/'+(p.slug==='roman-curtains'?'curtain-designs':p.slug)+'.jpg';
@@ -485,27 +483,27 @@ const src=p=>p.similar?IMG+p.similar+'.jpg':IMG+(p.slug==='monsoon-pvc-blinds'?'
 CATS.forEach((c,i)=>{const b=document.createElement('button');b.className='cat';b.type='button';b.innerHTML=`<div class="pic"></div><div class="t"><h3>${c[1]}</h3><small>${P.filter(p=>p.c===i).length} products. ${c[3]}</small></div>`;
  pic(b.querySelector('.pic'),CATART[i],c[0],i===6?IMG+'blinds/monsoon-pvc-blinds.jpg':i===7?IMG+'gbp-pleated-mosquito-net.jpg':'images/category-'+({0:'curtains',1:'blinds',2:'wallpaper',3:'sofa',4:'mattress',5:'flooring'})[i]+'.jpg',c[1]);
  b.onclick=()=>{setCat(i);$('#products').scrollIntoView()};$('#cats').append(b)});
-function tabs(){const t=$('#tabs');t.innerHTML='';[[-1,'All',P.length],...CATS.map((c,i)=>[i,c[1],P.filter(p=>p.c===i).length])].forEach(([i,n,k])=>{const b=document.createElement('button');b.className='tab';b.type='button';b.setAttribute('aria-pressed',i===cat);b.innerHTML=`${n}<em>${k}</em>`;b.onclick=()=>setCat(i);t.append(b);if(i===cat&&i>=0){const u=document.createElement('div');u.className='sub';P.filter(p=>p.c===i).forEach(p=>{const q=document.createElement('button');q.type='button';q.textContent=p.name;q.onclick=()=>open(p);u.append(q)});t.append(u)}})}
-function setCat(i){cat=i;try{history.replaceState(null,'',i<0?'#products':'#'+CATS[i][0])}catch(e){}tabs();render()}
+function tabs(){const t=$('#tabs');t.innerHTML='';[...CATS.map((c,i)=>[i,c[1],P.filter(p=>p.c===i).length])].forEach(([i,n,k])=>{const b=document.createElement('button');b.className='tab';b.type='button';b.setAttribute('aria-pressed',i===cat&&!$('#q').value.trim());b.innerHTML=`${n}<em>${k}</em>`;b.onclick=()=>setCat(i);t.append(b);if(i===cat&&i>=0){const u=document.createElement('div');u.className='sub';P.filter(p=>p.c===i).forEach(p=>{const q=document.createElement('button');q.type='button';q.textContent=p.name;q.onclick=()=>open(p);u.append(q)});t.append(u)}})}
+function setCat(i){cat=i;pg=1;$('#q').value=$('#hq').value='';const dq=$('#dq');if(dq)dq.value='';try{history.replaceState(null,'','#'+CATS[i][0])}catch(e){}tabs();render()}
 const addLabel=p=>list.includes(p.slug)?'On your list ✓':'Add to enquiry';
 let tm;function toast(t){if($('#dlg').open)return;$('#tt').textContent=t;$('#toast').hidden=false;clearTimeout(tm);tm=setTimeout(()=>{$('#toast').hidden=true},3500)}
 function toggle(p){const on=list.includes(p.slug);list=on?list.filter(s=>s!==p.slug):[...list,p.slug];saveList();syncList();render();steps();toast(on?p.name+' removed from your list':p.name+' added to your list')}
-function render(){const q=$('#q').value.trim().toLowerCase(),s=$('#sort').value;let r=P.filter(p=>(cat<0||p.c===cat)&&(!q||(p.name+' '+p.desc+' '+CATS[p.c][1]).toLowerCase().includes(q)));
- if(s==='az')r.sort((a,b)=>a.name.localeCompare(b.name));
- $('#crumbcat').textContent=cat<0?'':' / '+CATS[cat][1];$('#count').textContent=`Showing ${r.length} of ${P.length} products`;const g=$('#grid');g.innerHTML='';
+function render(){const q=$('#q').value.trim().toLowerCase();const key=cat+'|'+q;if(key!==lastKey){lastKey=key;pg=1;tabs()}
+ let r=P.filter(p=>q?(p.name+' '+p.desc+' '+CATS[p.c][1]).toLowerCase().includes(q):p.c===cat);
+ const pages=Math.max(1,Math.ceil(r.length/PER));if(pg>pages)pg=pages;const st=(pg-1)*PER,all=r.length;r=r.slice(st,st+PER);
+ $('#crumbcat').textContent=q?' / Search results':' / '+CATS[cat][1];$('#count').textContent=all?`Showing ${st+1}–${st+r.length} of ${all} ${q?'products matching “'+$('#q').value.trim()+'”':'products in '+CATS[cat][1]}`:'';pager(pages);const g=$('#grid');g.innerHTML='';
  if(!r.length){g.innerHTML='<p class="empty" style="grid-column:1/-1">No products match that search. Try a shorter word, or call us and we will help you find it.</p>'}
  r.forEach(p=>{const a=document.createElement('article');a.className='card';a.innerHTML=`<button class="pic" type="button" aria-label="View ${p.name.replace(/"/g,'')}"></button><div class="body"><small>${CATS[p.c][1]}</small><h3><a href="https://cubefurnishing.com/products/${p.slug}">${p.name}</a></h3><p>${p.desc}</p><div class="acts"><button class="link" type="button" data-v>Details</button><button class="link add ${list.includes(p.slug)?'on':''}" type="button" data-a>${addLabel(p)}</button></div></div>`;
   pic(a.querySelector('.pic'),p.art,p.slug,src(p),p.name);if(p.similar&&!p.similar.startsWith('gbp-')){const n=document.createElement('span');n.className='note';n.textContent='Similar product photo';a.querySelector('.pic').append(n)}a.querySelector('.pic').onclick=a.querySelector('[data-v]').onclick=()=>open(p);a.querySelector('[data-a]').onclick=()=>toggle(p);g.append(a)})}
+function pager(pages){const n=$('#pager');n.innerHTML='';if(pages<2)return;const go=k=>{pg=k;render();$('#products').scrollIntoView()};const mk=(t,k,lab,cur)=>{const b=document.createElement('button');b.type='button';b.textContent=t;if(lab)b.setAttribute('aria-label',lab);if(cur)b.setAttribute('aria-current','page');if(k<1||k>pages)b.disabled=true;else if(!cur)b.onclick=()=>go(k);n.append(b)};mk('‹ Prev',pg-1,'Previous page');for(let k=1;k<=pages;k++)mk(String(k),k,'Page '+k,k===pg);mk('Next ›',pg+1,'Next page')}
 let cur;function open(p){cur=p;const d=$('#dp');d.innerHTML='';pic(d,p.art,p.slug,src(p),p.name);$('#dk').textContent='Products / '+CATS[p.c][1]+' / '+p.name;$('#dt').textContent=p.name;$('#dr').textContent=p.similar&&!p.similar.startsWith('gbp-')?'Photo shows a similar product':'';$('#wa1').href=WA+encodeURIComponent('Hello Cube Furnishing, I would like a quote for '+p.name+'.');$('#dpd').textContent=p.desc;$('#pg').href='https://cubefurnishing.com/products/'+p.slug;$('#da').textContent=addLabel(p);$('#dlg').showModal()}
 $('#dc').onclick=()=>$('#dlg').close();$('#dlg').onclick=e=>{if(e.target===$('#dlg'))$('#dlg').close()};
 $('#da').onclick=()=>{toggle(cur);$('#da').textContent=addLabel(cur)};
 function syncList(){$('#navcount').textContent=$('#navcount2').textContent=list.length;const c=$('#chips');c.innerHTML='';if(!list.length){c.innerHTML='<span class="lead" style="font-weight:400">Nothing yet. Choose “Add to enquiry” on any product.</span>';return}
  list.forEach(s=>{const p=P.find(x=>x.slug===s),b=document.createElement('button');b.type='button';b.className='chip';b.textContent=p.name+' ×';b.setAttribute('aria-label','Remove '+p.name);b.onclick=()=>toggle(p);c.append(b)})}
-$('#q').oninput=()=>{$('#hq').value=$('#q').value;render()};
 $('#hq').oninput=()=>{$('#q').value=$('#hq').value;render()};
 $('#hq').onkeydown=e=>{if(e.key==='Enter')$('#products').scrollIntoView()};
-$('#bsearch').onclick=()=>{$('#products').scrollIntoView();$('#q').focus({preventScroll:true})};
-$('#sort').onchange=render;
+$('#bsearch').onclick=()=>{const h=$('#hq');if(h.offsetParent){$('#products').scrollIntoView();h.focus({preventScroll:true})}else{$('#drawer').showModal();$('#dq').focus()}};
 $('#form').onsubmit=e=>{e.preventDefault();const items=list.map(s=>P.find(x=>x.slug===s).name);const t=`Hello Cube Furnishing,\nName: ${$('#n').value}\nPhone: ${$('#p').value}`+(items.length?`\nInterested in: ${items.join(', ')}`:'')+($('#m').value?`\nMessage: ${$('#m').value}`:'');
  $('#msg').textContent=t;$('#wasend').href=WA+encodeURIComponent(t);$('#mail').href='mailto:info@cubefurnishing.com?subject='+encodeURIComponent('Website enquiry')+'&body='+encodeURIComponent(t);$('#out').hidden=false;prepared=true;steps();$('#st').textContent='Your enquiry is not sent until you send it in WhatsApp or email. You can also send it to +91 97275 96969 or info@cubefurnishing.com.'};
 $('#copy').onclick=()=>{navigator.clipboard.writeText($('#msg').textContent).then(()=>{$('#copy').textContent='Copied'},()=>{const r=document.createRange();r.selectNodeContents($('#msg'));const s=getSelection();s.removeAllRanges();s.addRange(r);$('#copy').textContent='Text selected. Copy it now'})};
