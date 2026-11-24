@@ -26,6 +26,7 @@
 .wt{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-top:1px dashed var(--line);padding-top:12px;font-weight:600}
 .wt b{font:400 1.5rem var(--display);color:var(--peacock);white-space:nowrap}
 .wt span{color:var(--muted);font-weight:500}
+.wt b.empty{font:500 .92rem var(--body);color:var(--muted)}
 .add{width:100%;min-height:52px;border:1.5px dashed var(--peacock);background:transparent;color:var(--peacock);font:600 1rem var(--body);cursor:pointer;border-radius:2px}
 .hint{font-size:.85rem;color:var(--muted);margin-top:4px}
 .slip{position:sticky;top:16px;background:var(--band);color:var(--onm);padding:clamp(20px,3vw,30px);display:grid;gap:14px;border-top:4px solid var(--accent)}
@@ -66,7 +67,7 @@
 
 <section class="how" aria-label="About the calculator">
   <div class="box"><h2>Curtain or Roman blind</h2><p>Curtains hang from a rod or track and open to the sides. Roman blinds are flat fabric panels that fold up as you raise them.</p></div>
-  <div class="box"><h2>Which lining</h2><p>Satin lining softens light and protects the fabric. Blackout lining blocks light, ideal for bedrooms. No lining keeps sheer fabrics light and airy.</p></div>
+  <div class="box"><h2>Which lining (astar)</h2><p>Satin lining softens light and protects the fabric. Blackout lining blocks light, ideal for bedrooms. No lining keeps sheer fabrics light and airy.</p></div>
   <div class="box"><h2>Not sure of the fabric price?</h2><p>Visit our showroom on Vasna-Bhayli Main Road to see fabrics, or <a href="https://wa.me/919727596969">ask us on WhatsApp</a> and we will help you choose.</p></div>
 </section>
 </main>
@@ -105,14 +106,14 @@ function draw(){
     <div class="fld"><label for="p${i}">Fabric price (₹ per metre)</label><input id="p${i}" type="number" inputmode="decimal" min="0" data-i="${i}" data-k="p" value="${x.p}" placeholder="e.g. 350"></div>
    </div>
    <div class="fld"><span class="lb">Type</span>${seg(i,'t',[['curtain','Curtain'],['roman','Roman blind']],x.t)}</div>
-   <div class="fld"><span class="lb">Lining</span>${seg(i,'l',[['','No lining'],['satin','Satin'],['blackout','Blackout']],x.l)}</div>
+   <div class="fld"><span class="lb">Lining (Astar)</span>${seg(i,'l',[['','No lining'],['satin','Satin'],['blackout','Blackout']],x.l)}</div>
    <div class="wt"><span>Window ${i+1} price</span><b id="wp${i}">–</b></div>
   </div>`).join('');
   calc();
 }
 function calc(){
   let tot=0;const items=[];
-  W.forEach((x,i)=>{const v=price(x);const el=$('wp'+i);if(el)el.textContent=v?inr(v):'Fill in all three boxes';
+  W.forEach((x,i)=>{const v=price(x);const el=$('wp'+i);if(el){el.textContent=v?inr(v):'Fill in width, height and fabric price';el.classList.toggle('empty',!v)}
     if(v){tot+=v;items.push([`Window ${i+1}: ${num(x.w)}" × ${num(x.h)}" ${x.t==='roman'?'Roman blind':'curtain'}, ${LN[x.l]}`,v,num(x.p)])}});
   $('total').textContent=inr(tot);
   $('list').innerHTML=items.length?items.map(t=>`<li><span>${t[0]}</span><b>${inr(t[1])}</b></li>`).join(''):'<li><span>Enter a window size and fabric price to see the price.</span></li>';

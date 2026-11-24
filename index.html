@@ -159,7 +159,7 @@ dialog::backdrop{background:rgba(6,20,20,.65)}
 .stars{color:var(--ticket);font-size:1.5rem;letter-spacing:.14em;line-height:1;margin-top:14px}
 .qr{background:#fff;padding:10px;display:block;width:190px;line-height:0}.qr img{width:100%;height:auto;display:block}
 .fl{display:flex;flex-wrap:wrap;gap:16px}footer a{color:var(--on-band)}
-.bnav{display:none}
+.bnav{display:none}.cfab{position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:11;display:flex;align-items:center;gap:10px;min-height:58px;padding:0 22px 0 16px;border-radius:999px;background:var(--accent);color:#fff;text-decoration:none;font:600 .95rem var(--body);box-shadow:0 10px 28px rgba(36,19,41,.35);transition:transform .15s}.cfab:hover{transform:translateY(-2px);color:#fff}.cfab svg{width:28px;height:28px;flex:none}@media(max-width:720px){.cfab{width:58px;padding:0;justify-content:center}.cfab span{display:none}}@media(max-width:720px){.cfab{bottom:calc(76px + env(safe-area-inset-bottom,0px))}}
 #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:12;background:var(--band);color:var(--on-band);padding:10px 16px;display:flex;gap:14px;align-items:center;width:max-content;max-width:calc(100vw - 32px);font-size:.92rem;box-shadow:0 10px 30px rgba(15,4,20,.35)}#toast a{color:var(--ticket);font-weight:600;flex:none}
 @media(max-width:720px){
  body{padding-bottom:calc(62px + env(safe-area-inset-bottom,0px))}
@@ -533,4 +533,5 @@ $('#dq').oninput=()=>{$('#q').value=$('#hq').value=$('#dq').value;render()};$('#
 tabs();render();syncList();steps();route();
 </script>
 
+<a class="cfab" href="/curtain-price-calculator" aria-label="Curtain price calculator"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h20"/><path d="M4 3v18c2-1 4-5 4-9S6 5 4 3z"/><path d="M20 3v18c-2-1-4-5-4-9s2-7 4-9z"/></svg><span>Price calculator</span></a>
 </body></html>
