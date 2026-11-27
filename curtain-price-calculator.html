@@ -40,6 +40,7 @@
 .inc{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-left:4px solid #f39a5b;padding:12px 14px}.inc b{display:block;color:var(--onb);font-size:.95rem;margin-bottom:8px}.inc ul{display:flex;flex-wrap:wrap;gap:6px}.inc li{border:0;padding:4px 10px;background:rgba(255,255,255,.12);color:var(--onb);font-size:.86rem;border-radius:999px}.inc li:before{content:"✓ ";color:#f39a5b;font-weight:700}
 .slip ul.notes{gap:6px}.notes li{border:0;padding:0 0 0 16px;position:relative;font-size:.86rem;line-height:1.5;display:block}.notes li:before{content:"";position:absolute;left:2px;top:.6em;width:6px;height:6px;border-radius:50%;background:#f39a5b}.notes b{color:var(--onb)}
 .hint b{color:var(--fg)}
+.motor{background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--accent);padding:12px 16px}.motor b{display:block;margin-bottom:6px}.motor ul{margin:0;padding-left:18px;display:grid;gap:3px;font-size:.92rem;color:var(--muted)}.notes li[hidden]{display:none}
 .how{margin-top:clamp(40px,6vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
 .faq{margin-top:clamp(40px,6vw,64px);max-width:820px}.faq h2{margin-bottom:14px}.faq details{background:var(--surface);border:1px solid var(--line);margin-bottom:10px}.faq summary{cursor:pointer;padding:14px 18px;font-weight:600;list-style-position:inside}.faq details p{padding:0 18px 16px;color:var(--muted)}.faq .kw{margin-top:16px;font-size:.9rem;color:var(--muted)}
 .how h2{font-size:1.2rem;margin-bottom:6px}.how p{color:var(--muted);font-size:.95rem}
@@ -65,8 +66,8 @@
   <div class="total" id="total">₹0</div>
   <ul id="list"></ul>
   <a class="btn" id="send" href="https://wa.me/919727596969">Send this estimate on WhatsApp</a>
-  <div class="inc"><b>Price includes</b><ul><li>Fabric</li><li>Lining / Astar</li><li>Stitching and channel</li><li>Fitting</li></ul></div>
-  <ul class="notes"><li>You select the fabric as per your needs.</li><li>This is an estimate. The final price is confirmed after we measure your windows.</li><li><b>GST extra as applicable.</b></li></ul>
+  <div class="inc"><b>Price includes</b><ul id="incl"><li>Fabric</li><li>Stitching and channel</li><li>Fitting</li></ul></div>
+  <ul class="notes"><li>You select the fabric as per your needs.</li><li>This is an estimate. The final price is confirmed after we measure your windows.</li><li id="motnote" hidden>Motor from ₹6,000 per window; the final motor price depends on the model you choose.</li><li><b>GST extra as applicable.</b></li></ul>
 </aside>
 </div>
 
@@ -90,7 +91,8 @@
 <script>
 {
 /* Shop rates (same as the Cube Quote app). Change here to update the website calculator. */
-const RATE={fw:54,full:2.7,sa:100,bo:180,st:300,ins:250,rs:150,rpw:48,rha:14,hem:12};
+const RATE={fw:54,full:2.7,sa:100,bo:180,st:300,ins:250,rs:150,rpw:48,rha:14,hem:12,stm:650,motor:6000,insm:1000};
+const isMot=x=>x.t!=='roman'&&x.o==='motor';
 const KEY='cube-cpc1';
 const $=id=>document.getElementById(id);
 const num=v=>{const x=parseFloat(v);return isFinite(x)&&x>0?x:0};
@@ -104,10 +106,10 @@ function price(x){
   const w=num(x.w),h=num(x.h),p=num(x.p);if(!w||!h||!p)return 0;
   let panels,cut,make;
   if(x.t==='roman'){panels=Math.ceil(w/RATE.rpw);cut=panels*(h+RATE.rha);make=Math.ceil(w*h/144)*RATE.rs}
-  else{panels=Math.ceil(w*RATE.full/RATE.fw);cut=panels*(h+RATE.hem);make=Math.ceil(w/12)*RATE.st}
+  else{panels=Math.ceil(w*RATE.full/RATE.fw);cut=panels*(h+RATE.hem);make=Math.ceil(w/12)*(isMot(x)?RATE.stm:RATE.st)}
   const m=Math.ceil(cut*0.0254*2)/2;
   const lin=x.l==='satin'?m*RATE.sa:x.l==='blackout'?m*RATE.bo:0;
-  return m*p+lin+make+RATE.ins;
+  return m*p+lin+make+(isMot(x)?RATE.motor+RATE.insm:RATE.ins);
 }
 const seg=(i,key,opts,val)=>`<div class="seg" role="group">${opts.map(o=>`<button type="button" data-i="${i}" data-s="${key}" data-v="${o[0]}" aria-pressed="${val===o[0]}">${o[1]}</button>`).join('')}</div>`;
 function draw(){
@@ -119,6 +121,8 @@ function draw(){
     <div class="fld"><label for="p${i}">Fabric price (₹ per metre)</label><input id="p${i}" type="number" inputmode="decimal" min="0" data-i="${i}" data-k="p" value="${x.p}" placeholder="e.g. 350"></div>
    </div>
    <div class="fld"><span class="lb">Type</span>${seg(i,'t',[['curtain','Arabian / 3 Pleat'],['roman','Roman blind']],x.t)}</div>
+   ${x.t!=='roman'?`<div class="fld"><span class="lb">Operation</span>${seg(i,'o',[['manual','Manual'],['motor','Motorized']],x.o||'manual')}</div>`:''}
+   ${isMot(x)?`<div class="motor"><b>Motorized curtain – motor details</b><ul><li>One motor per window, from ₹6,000</li><li>Control by remote, mobile app, Wi-Fi and Alexa voice</li><li>5-wire motor</li><li>Made in India</li><li>5-year warranty on the motor</li><li>Stitching and channel for motorized curtains: ₹650 per running ft</li><li>Motorized fitting: ₹1,000 per window</li><li>The final motor price depends on the model you choose. We confirm it at the measurement visit.</li></ul></div>`:''}
    <div class="fld"><span class="lb">Lining (Astar)</span>${seg(i,'l',[['','No lining'],['satin','Satin'],['blackout','Blackout']],x.l)}</div>
    <div class="wt"><span>Window ${i+1} price</span><b id="wp${i}">–</b></div>
   </div>`).join('');
@@ -126,19 +130,22 @@ function draw(){
 }
 function calc(){
   let tot=0;const items=[];
-  W.forEach((x,i)=>{const v=price(x);const el=$('wp'+i);if(el){el.textContent=v?inr(v):'Fill in width, height and fabric price';el.classList.toggle('empty',!v)}
-    if(v){tot+=v;items.push([`Window ${i+1}: ${num(x.w)}" × ${num(x.h)}" ${x.t==='roman'?'Roman blind':'Arabian / 3 pleat curtain'}, ${LN[x.l]}`,v,num(x.p)])}});
-  $('total').textContent=inr(tot);
-  $('list').innerHTML=items.length?items.map(t=>`<li><span>${t[0]}</span><b>${inr(t[1])}</b></li>`).join(''):'<li><span>Enter a window size and fabric price to see the price.</span></li>';
-  const msg='Hello Cube Furnishing, I used the curtain price calculator on your website.\n\n'+(items.length?items.map(t=>`${t[0]}, fabric ₹${t[2]}/m: ${inr(t[1])}`).join('\n')+`\n\nEstimate: ${inr(tot)} + GST\n\nPlease confirm the price and arrange a measurement visit.`:'I would like a quote for curtains.');
+  W.forEach((x,i)=>{const v=price(x);const el=$('wp'+i);if(el){el.textContent=v?(isMot(x)?'from ':'')+inr(v):'Fill in width, height and fabric price';el.classList.toggle('empty',!v)}
+    if(v){tot+=v;items.push([`Window ${i+1}: ${num(x.w)}" × ${num(x.h)}" ${x.t==='roman'?'Roman blind':'Arabian / 3 pleat curtain, '+(isMot(x)?'motorized':'manual')}, ${LN[x.l]}`,v,num(x.p),isMot(x)])}});
+  const anyMot=items.some(t=>t[3]),anyLin=W.some(x=>price(x)&&x.l),fr=anyMot?'from ':'';
+  $('incl').innerHTML=['Fabric',anyLin&&'Lining / Astar','Stitching and channel',anyMot&&'Motor','Fitting'].filter(Boolean).map(t=>`<li>${t}</li>`).join('');
+  $('motnote').hidden=!anyMot;
+  $('total').textContent=fr+inr(tot);
+  $('list').innerHTML=items.length?items.map(t=>`<li><span>${t[0]}</span><b>${t[3]?'from ':''}${inr(t[1])}</b></li>`).join(''):'<li><span>Enter a window size and fabric price to see the price.</span></li>';
+  const msg='Hello Cube Furnishing, I used the curtain price calculator on your website.\n\n'+(items.length?items.map(t=>`${t[0]}, fabric ₹${t[2]}/m: ${t[3]?'from ':''}${inr(t[1])}`).join('\n')+`\n\nEstimate: ${fr}${inr(tot)} + GST\n\nPlease confirm the price and arrange a measurement visit.`:'I would like a quote for curtains.');
   $('send').href='https://wa.me/919727596969?text='+encodeURIComponent(msg);
 }
 document.addEventListener('input',e=>{const t=e.target;if(t.dataset.k==null)return;const x=W[+t.dataset.i];if(!x)return;x[t.dataset.k]=t.value;calc();save()});
 $('wins').addEventListener('click',e=>{
-  const s=e.target.closest('[data-s]');if(s){W[+s.dataset.i][s.dataset.s]=s.dataset.v;for(const b of s.parentNode.children)b.setAttribute('aria-pressed',b===s);calc();save();return}
+  const s=e.target.closest('[data-s]');if(s){W[+s.dataset.i][s.dataset.s]=s.dataset.v;if(s.dataset.s!=='l'){draw()}else{for(const b of s.parentNode.children)b.setAttribute('aria-pressed',b===s);calc()}save();return}
   const d=e.target.closest('[data-del]');if(d){W.splice(+d.dataset.del,1);draw();save()}
 });
-$('add').addEventListener('click',()=>{const last=W[W.length-1]||{};W.push({w:'',h:'',p:last.p||'',t:last.t||'curtain',l:last.l||''});draw();save();$('w'+(W.length-1)).focus()});
+$('add').addEventListener('click',()=>{const last=W[W.length-1]||{};W.push({w:'',h:'',p:last.p||'',t:last.t||'curtain',o:last.o||'manual',l:last.l||''});draw();save();$('w'+(W.length-1)).focus()});
 draw();
 }
 </script>
